@@ -15,15 +15,13 @@ builder.Services.AddDbContext<LapDbSimpleContext>(options =>
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-const string Cors = "Cors";
-builder.Services.AddCors(options => //Add Cors Polity
+builder.Services.AddCors(options =>
 {
-    options.AddPolicy(Cors, app =>
-    {
-        app.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-    });
+    options.AddPolicy("CORS", 
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
 
 
@@ -38,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(Cors);
+app.UseCors("CORS");
 
 app.UseHttpsRedirection();
 
