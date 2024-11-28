@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Projects\\SimpleLAP\\wwwroot\\1.pdf",
+      "PackagePath": "staticwebassets\\1.pdf"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.SimpleLAP.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.build.SimpleLAP.props",
+      "PackagePath": "build\\SimpleLAP.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.SimpleLAP.props",
+      "PackagePath": "buildMultiTargeting\\SimpleLAP.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildTransitive.SimpleLAP.props",
+      "PackagePath": "buildTransitive\\SimpleLAP.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
