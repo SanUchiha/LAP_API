@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging.Signing;
 using SimpleLAP.Models;
 
 namespace SimpleLAP.Controllers;
@@ -67,7 +68,7 @@ public class CampusController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!CampusExists(id))
+            if (!CampusExistsAsync(id))
             {
                 return NotFound();
             }
@@ -119,7 +120,7 @@ public class CampusController : ControllerBase
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    private bool CampusExists(int id)
+    private bool CampusExistsAsync(int id)
     {
         return _context.Campuses.Any(e => e.IdCampus == id);
     }
@@ -129,14 +130,14 @@ public class CampusController : ControllerBase
     /// </summary>
     /// <param name="campusId"></param>
     /// <returns></returns>
-    [HttpGet("pdf/{campusId:int}")]
-    public IActionResult DownloadPdf(int campusId)
+    [HttpGet("pdf/{idCampus}")]
+    public IActionResult DownloadPdf(int idCampus)
     {
         string rutaPdf =
             Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "wwwroot",
-                campusId + ".pdf");
+                idCampus + ".pdf");
 
         if (System.IO.File.Exists(rutaPdf))
         {
@@ -150,5 +151,25 @@ public class CampusController : ControllerBase
         {
             return NotFound();
         }
+    }
+
+    /// <summary>
+    /// Obtiene los participantes de un campus
+    /// </summary>
+    /// <param name="idCampus"></param>
+    /// <returns></returns>
+    [HttpGet("participantes/{idCampus}")]
+    public async Task<IActionResult> GetParticipantesByCampus(int idCampus)
+    {
+        bool existCampus = CampusExistsAsync(idCampus);
+
+        if(!existCampus) return NotFound();
+
+        List<Participante> participantes = 
+            await _context.Participantes
+                .Where(p => p.IdCampus == idCampus)
+                .ToListAsync();
+
+        return Ok(participantes);
     }
 }
