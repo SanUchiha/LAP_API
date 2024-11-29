@@ -6,7 +6,6 @@ using SimpleLAP.Models;
 
 namespace SimpleLAP.Controllers;
 
-[EnableCors("CORS")]
 [Route("api/[controller]")]
 [ApiController]
 public class CampusController : ControllerBase

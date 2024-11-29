@@ -7,7 +7,6 @@ using SimpleLAP.Models;
 
 namespace SimpleLAP.Controllers;
 
-[EnableCors("CORS")]
 [Route("api/[controller]")]
 [ApiController]
 public class ParticipantesController : ControllerBase
@@ -93,23 +92,34 @@ public class ParticipantesController : ControllerBase
     public async Task<ActionResult<Participante>> PostParticipante(ParticipanteDTO participanteDTO)
     {
         Campus? campus = _context.Campuses
-                .AsNoTracking()
-                .FirstOrDefault(c => c.IdCampus == participanteDTO.IdCampus);
+                 .AsNoTracking()
+                 .FirstOrDefault(c => c.IdCampus == participanteDTO.IdCampus);
 
         if (campus == null)
-        {
             return BadRequest("El campus asociado no existe.");
-        }
 
-        Participante participante = 
+        Participante participante =
             _mapper.Map<ParticipanteDTO, Participante>(participanteDTO);
 
-        _context.Participantes.Add(participante);
-        await _context.SaveChangesAsync();
+        try
+        {
+            _context.Participantes.Add(participante);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            // Captura el error relacionado con la clave única
+            if (ex.InnerException?.Message.Contains("UQ__Particip__AD99A6EEBCC439EB") ?? false)
+            {
+                return Conflict("Ya existe un participante con el mismo DNI.");
+            }
+
+            // Si es otro tipo de error, puedes manejarlo aquí
+            return StatusCode(500, "Ocurrió un error al intentar guardar el participante.");
+        }
 
         return Ok();
     }
-
 
     /// <summary>
     /// Elimina un participante
