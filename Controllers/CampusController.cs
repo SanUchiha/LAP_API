@@ -8,14 +8,9 @@ namespace SimpleLAP.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CampusController : ControllerBase
+public class CampusController(LapDbSimpleContext context) : ControllerBase
 {
-    private readonly LapDbSimpleContext _context;
-
-    public CampusController(LapDbSimpleContext context)
-    {
-        _context = context;
-    }
+    private readonly LapDbSimpleContext _context = context;
 
     /// <summary>
     /// Obtiene todos los campus
@@ -24,7 +19,12 @@ public class CampusController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Campus>>> GetCampuses()
     {
-        return await _context.Campuses.ToListAsync();
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var campuses = await _context.Campuses
+                                     .Where(c => c.DiaFinal >= today)
+                                     .ToListAsync();
+
+        return Ok(campuses);
     }
 
     /// <summary>

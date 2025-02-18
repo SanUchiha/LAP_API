@@ -9,16 +9,10 @@ namespace SimpleLAP.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ParticipantesController : ControllerBase
+public class ParticipantesController(LapDbSimpleContext context, IMapper mapper) : ControllerBase
 {
-    private readonly LapDbSimpleContext _context;
-    private readonly IMapper _mapper;
-
-    public ParticipantesController(LapDbSimpleContext context, IMapper mapper)
-    {
-        _context = context;
-        _mapper = mapper;
-    }
+    private readonly LapDbSimpleContext _context = context;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Obtiene todos los participantes
