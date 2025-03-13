@@ -19,8 +19,8 @@ public class CampusController(LapDbSimpleContext context) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Campus>>> GetCampuses()
     {
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var campuses = await _context.Campuses
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+        List<Campus> campuses = await _context.Campuses
                                      .Where(c => c.DiaFinal >= today)
                                      .ToListAsync();
 
@@ -35,7 +35,7 @@ public class CampusController(LapDbSimpleContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Campus>> GetCampus(int id)
     {
-        var campus = await _context.Campuses.FindAsync(id);
+        Campus? campus = await _context.Campuses.FindAsync(id);
 
         if (campus == null)
         {
